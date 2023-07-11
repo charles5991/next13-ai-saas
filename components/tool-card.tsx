@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 
 import { 
@@ -8,6 +10,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
 
 interface ToolCardProps {
   src: string,
@@ -24,8 +27,14 @@ export const ToolCard = ({
   description,
   premium
 }: ToolCardProps) => {
+  const router = useRouter();
+  
+  const onClick = () => {
+    router.push(href);
+  }
+
   return (
-    <Card className="group cursor-pointer">
+    <Card onClick={onClick} className="group cursor-pointer">
       <CardHeader>
         <CardTitle className="text-lg font-bold flex items-center">
         <div className="relative h-8 w-8 mr-2 group-hover:scale-125 transition duration-150">
