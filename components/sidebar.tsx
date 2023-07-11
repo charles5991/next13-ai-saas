@@ -1,20 +1,34 @@
 import Image from "next/image";
 import { Montserrat } from 'next/font/google'
-import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/server";
 
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Zap } from "lucide-react";
 
 const poppins = Montserrat ({ weight: '600', subsets: ['latin']  })
 
 export const Sidebar = () => {
   const routes = [
     {
+      label: 'Home',
+      icon: '/home.png',
+      active: true,
+      href: '/',
+    },
+    {
+      label: 'Email Writer',
+      icon: '/mail.png',
+      active: false,
+      href: '/email',
+      premium: false,
+    },
+    {
       label: 'Chat',
       icon: '/chat.png',
       active: false,
       href: '/',
+      premium: true,
     },
     {
       label: 'Image Generator',
@@ -30,23 +44,16 @@ export const Sidebar = () => {
       href: '/blog',
       premium: true,
     },
-    {
-      label: 'Email Writer',
-      icon: '/mail.png',
-      active: false,
-      href: '/email',
-      premium: true,
-    }
   ]
 
   return (
     <div className="space-y-4 py-4 flex flex-col h-full bg-[#111827] text-white">
       <div className="px-3 py-2 flex-1">
         <div className="flex items-center pl-3 mb-14">
-          <div className="relative h-10 w-10 mr-4">
+          <div className="relative h-7 w-7 mr-4">
             <Image fill alt="Logo" src="/nira.png" />
           </div>
-          <h1 className={cn("text-3xl font-bold", poppins.className)}>
+          <h1 className={cn("text-xl font-bold", poppins.className)}>
             Genius
           </h1>
         </div>
@@ -55,8 +62,8 @@ export const Sidebar = () => {
             <div
               key={route.label} 
               className={cn(
-                "group flex p-3 w-full justify-start font-semibold cursor-pointer hover:text-white transition",
-                route.active ? "text-white" : "text-zinc-500"
+                "text-sm group flex p-3 w-full justify-start font-semibold cursor-pointer hover:text-white transition",
+                route.active ? "text-white" : "text-zinc-400"
               )}
             >
               <div className="flex items-center flex-1">
@@ -75,11 +82,10 @@ export const Sidebar = () => {
         </div>
       </div>
       <div className="px-3 py-2">
-        <LogoutLink>
-          <Button variant="secondary" className="w-full">
-            Logout
-          </Button>
-        </LogoutLink>
+        <Button variant="premium" className="w-full">
+          Upgrade
+          <Zap className="w-4 h-4 ml-2" />
+        </Button>
       </div>
     </div>
   )
