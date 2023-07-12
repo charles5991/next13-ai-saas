@@ -1,10 +1,5 @@
 import { LogoutLink, getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -14,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { UserAvatar } from "@/components/user-avatar"
 
 export const UserNavigation = () => {
   const { getUser } = getKindeServerSession();
@@ -22,16 +18,11 @@ export const UserNavigation = () => {
   const name = user.given_name || "";
   const email = user.email || "";
 
-  const firstNameInitial = name?.charAt(0);
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src="/avatars/01.png" alt="@shadcn" />
-            <AvatarFallback>{firstNameInitial}</AvatarFallback>
-          </Avatar>
+          <UserAvatar />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>

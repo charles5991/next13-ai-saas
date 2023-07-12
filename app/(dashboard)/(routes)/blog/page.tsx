@@ -1,6 +1,11 @@
+"use client";
+
 import { Heading } from "@/components/heading";
+import { useProProtection } from "@/hooks/use-pro-protection";
 
 const BlogPage = () => {
+  useProProtection();
+
   return ( 
     <div>
       <Heading

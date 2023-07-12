@@ -4,17 +4,17 @@ import { Heading } from "@/components/heading";
 export default function HomePage() {
   const tools = [
     {
-      label: 'Email Writer',
+      label: 'Mail Writer',
       description: 'Create your best email yet.',
       icon: '/mail.png',
-      href: '/email',
+      href: '/mail',
       premium: false,
     },
     {
       label: 'Chat',
       description: 'Chat with an AI Assistant.',
       icon: '/chat.png',
-      href: '/',
+      href: '/chat',
       premium: true,
     },
     {

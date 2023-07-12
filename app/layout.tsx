@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Nunito_Sans } from 'next/font/google'
 
 import { ToasterProvider } from '@/components/toaster-provider'
+import { ModalProvider } from '@/components/modal-provider'
 
 import './globals.css'
 
@@ -21,6 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={font.className}>
         <ToasterProvider />
+        <ModalProvider />
         {children}
       </body>
     </html>

@@ -7,6 +7,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Download } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 
 import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
@@ -16,12 +17,14 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/component
 import { Loader } from "@/components/loader";
 import { Empty } from "@/components/ui/empty";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useProProtection } from "@/hooks/use-pro-protection";
 
 import { amountOptions, formSchema, resolutionOptions } from "./constants";
-import { toast } from "react-hot-toast";
 
 
 const PhotoPage = () => {
+  useProProtection();
+
   const [photos, setPhotos] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -158,7 +161,9 @@ const PhotoPage = () => {
           </CardContent>
         </Card>
         {isLoading && (
-          <Loader />
+          <div className="p-20">
+            <Loader />
+          </div>
         )}
         {photos.length === 0 && !isLoading && (
           <Empty label="Nothing to see here..." />
