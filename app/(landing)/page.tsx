@@ -3,13 +3,18 @@ import {
   LoginLink
 } from "@kinde-oss/kinde-auth-nextjs/server";
 
-const AuthPage = () => {
+import { LandingNavbar } from "@/components/landing-navbar";
+import { LandingHero } from "@/components/landing-hero";
+import { LandingContent } from "@/components/landing-content";
+
+const LandingPage = () => {
   return ( 
-    <div>
-      <LoginLink>Sign in</LoginLink>
-      <RegisterLink>Sign up</RegisterLink>
+    <div className="h-full">
+      <LandingNavbar />
+      <LandingHero />
+      <LandingContent />
     </div>
    );
 }
  
-export default AuthPage;
+export default LandingPage;
