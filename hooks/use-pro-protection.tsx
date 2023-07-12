@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 
 import { useProModal } from "@/hooks/use-pro-modal";
 
-const isSubscribed = false;
+const isSubscribed = true;
 
 export const useProProtection = () => {
   const router = useRouter();
