@@ -4,7 +4,6 @@ import Link from "next/link"
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/server";
 
 const font = Montserrat({ weight: '600', subsets: ['latin'] });
 
@@ -20,11 +19,11 @@ export const LandingNavbar = () => {
         </h1>
       </Link>
       <div className="flex items-center gap-x-2">
-        <LoginLink>
+        <Link href="/sign-up">
           <Button variant="outline" className="rounded-full">
             Get Started
           </Button>
-        </LoginLink>
+        </Link>
       </div>
     </nav>
   )

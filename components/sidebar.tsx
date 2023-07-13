@@ -20,10 +20,10 @@ const routes = [
     href: '/dashboard',
   },
   {
-    label: 'Mail Writer',
-    icon: '/mail.png',
+    label: 'Voice Generator',
+    icon: '/voice.png',
     active: false,
-    href: '/mail',
+    href: '/voice',
     premium: false,
   },
   {
@@ -39,9 +39,9 @@ const routes = [
     premium: true,
   },
   {
-    label: 'Blog Writer',
-    icon: '/blog.png',
-    href: '/blog',
+    label: 'Transcript Maker',
+    icon: '/transcript.png',
+    href: '/transcript',
     premium: true,
   },
 ];

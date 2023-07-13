@@ -69,7 +69,10 @@ export const ProModal = () => {
                       alt={item.label}
                     />
                   </div>
-                  {item.label}
+                  <div className="text-start flex flex-col">
+                    <div>{item.label}</div>
+                    <div className="text-muted-foreground text-sm">Unlimited access</div>
+                  </div>
                 </div>
                 <CheckCircle className="text-primary w-5 h-5" />
               </div>

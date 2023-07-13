@@ -4,10 +4,10 @@ import { Heading } from "@/components/heading";
 export default function HomePage() {
   const tools = [
     {
-      label: 'Mail Writer',
-      description: 'Create your best email yet.',
-      icon: '/mail.png',
-      href: '/mail',
+      label: 'Voice Generator',
+      description: 'Generate AI Voices.',
+      icon: '/voice.png',
+      href: '/voice',
       premium: false,
     },
     {
@@ -19,16 +19,16 @@ export default function HomePage() {
     },
     {
       label: 'Photo Generator',
-      description: 'Generate AI Photos',
+      description: 'Generate AI Photos.',
       icon: '/photo.png',
       href: '/photo',
       premium: true,
     },
     {
-      label: 'Blog Writer',
-      description: 'Create your best blog post yet.',
-      icon: '/blog.png',
-      href: '/blog',
+      label: 'Transcript Maker',
+      description: 'Create transcript from audio.',
+      icon: '/transcript.png',
+      href: '/transcript',
       premium: true,
     },
   ]

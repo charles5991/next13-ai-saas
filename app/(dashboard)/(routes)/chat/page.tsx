@@ -20,6 +20,7 @@ import { Loader } from "@/components/loader";
 
 import { formSchema } from "./constants";
 import { useProProtection } from "@/hooks/use-pro-protection";
+import { UserAvatar } from "@/components/user-avatar";
 
 const ChatPage = () => {
   useProProtection();
@@ -80,7 +81,7 @@ const ChatPage = () => {
                   message.isUser ? "bg-white" : "bg-muted",
                 )}
               >
-                {!message.isUser && <BotAvatar />}
+                {!message.isUser ? <BotAvatar /> : <UserAvatar />}
                 <p>
                   {message.message}
                 </p>

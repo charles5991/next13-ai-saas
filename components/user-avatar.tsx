@@ -1,18 +1,17 @@
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { useUser } from "@clerk/nextjs";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export const UserAvatar = () => {
-  const { getUser } = getKindeServerSession();
-
-  const user = getUser();
-  const name = user.given_name || "";
-
-  const firstNameInitial = name?.charAt(0);
+  const { user } = useUser();
 
   return (
     <Avatar className="h-8 w-8">
-      <AvatarFallback>{firstNameInitial}</AvatarFallback>
+      <AvatarImage src={user?.profileImageUrl} />
+      <AvatarFallback>
+        {user?.firstName?.charAt(0)}
+        {user?.lastName?.charAt(0)}
+      </AvatarFallback>
     </Avatar>
   );
 };
