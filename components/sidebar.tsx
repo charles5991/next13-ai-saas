@@ -3,46 +3,57 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Montserrat } from 'next/font/google'
-import { Zap } from "lucide-react";
+import { Code, FileAudio, ImageIcon, LayoutDashboard, MessageSquare, Settings, VideoIcon, Zap } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useProModal } from "@/hooks/use-pro-modal";
+import { Card, CardContent } from "@/components/ui/card";
 
 const poppins = Montserrat ({ weight: '600', subsets: ['latin'] });
 
 const routes = [
   {
-    label: 'Home',
-    icon: '/home.png',
+    label: 'Dashboard',
+    icon: LayoutDashboard,
     href: '/dashboard',
+    color: "text-sky-500"
   },
   {
-    label: 'Voice Generator',
-    icon: '/voice.png',
-    active: false,
-    href: '/voice',
-    premium: false,
+    label: 'Conversation',
+    icon: MessageSquare,
+    href: '/conversation',
+    color: "text-violet-500",
   },
   {
-    label: 'Chat',
-    icon: '/chat.png',
-    href: '/chat',
-    premium: true,
+    label: 'Audio Generation',
+    icon: FileAudio,
+    color: "text-emerald-500",
+    href: '/audio',
   },
   {
-    label: 'Photo Generator',
-    icon: '/photo.png',
-    href: '/photo',
-    premium: true,
+    label: 'Image Generation',
+    icon: ImageIcon,
+    color: "text-pink-700",
+    href: '/image',
   },
   {
-    label: 'Transcript Maker',
-    icon: '/transcript.png',
-    href: '/transcript',
-    premium: true,
+    label: 'Video Generation',
+    icon: VideoIcon,
+    color: "text-orange-700",
+    href: '/video',
+  },
+  {
+    label: 'Code Generation',
+    icon: Code,
+    color: "text-green-700",
+    href: '/code',
+  },
+  {
+    label: 'Settings',
+    icon: Settings,
+    href: '/settings',
   },
 ];
 
@@ -67,31 +78,28 @@ export const Sidebar = () => {
               key={route.href} 
               href={route.href}
               className={cn(
-                "text-sm group flex p-3 w-full justify-start font-semibold cursor-pointer hover:text-white transition",
-                pathname === route.href ? "text-white" : "text-zinc-400"
+                "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer hover:text-white hover:bg-white/10 rounded-lg transition",
+                pathname === route.href ? "text-white bg-white/10" : "text-zinc-400",
               )}
             >
               <div className="flex items-center flex-1">
-                <div className="relative h-8 w-8 mr-4 group-hover:scale-125 transition duration-150">
-                  <Image alt="Icon" src={route.icon} fill />
-                </div>
+                <route.icon className={cn("h-5 w-5 mr-3", route.color)} />
                 {route.label}
               </div>
-              {route.premium && (
-                <Badge variant="premium" className="font-bold uppercase p-2">
-                  pro
-                </Badge>
-              )}
             </Link>
           ))}
         </div>
       </div>
-      <div className="px-3 py-2">
-        <Button onClick={proModal.onOpen} variant="premium" className="w-full">
-          Upgrade
-          <Zap className="w-4 h-4 ml-2 fill-white" />
-        </Button>
+      <div className="px-3">
+        <Card className="bg-white/10 border-0">
+          <CardContent className="py-6">
+            <Button onClick={proModal.onOpen} variant="premium" className="w-full">
+              Upgrade
+              <Zap className="w-4 h-4 ml-2 fill-white" />
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </div>
-  )
-}
+  );
+};

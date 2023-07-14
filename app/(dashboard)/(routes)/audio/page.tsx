@@ -17,6 +17,7 @@ import { Empty } from "@/components/ui/empty";
 import { useProProtection } from "@/hooks/use-pro-protection";
 
 import { formSchema } from "./constants";
+import { FileAudio, Send } from "lucide-react";
 
 const VoicePage = () => {
   useProProtection();
@@ -36,9 +37,10 @@ const VoicePage = () => {
     try {
       setVoice(undefined);
 
-      const response = await axios.post('/api/voice', values);
+      const response = await axios.post('/api/audio', values);
 
       setVoice(response.data.audio_out);
+      form.reset();
     } catch (error: any) {
       toast.error("Something went wrong.");
     }
@@ -47,56 +49,56 @@ const VoicePage = () => {
   return ( 
     <div>
       <Heading
-        title="Voice Generator"
-        description="Generate AI Voices"
-        src="/voice.png"
+        title="Audio Generation"
+        description="Turn your prompt into an audio file."
+        icon={FileAudio}
+        iconColor="text-emerald-500"
+        bgColor="bg-emerald-500/10"
       />
       <div className="px-4 lg:px-8">
-        <Card className="bg-gray-100 border-0">
-          <CardHeader>
-            <CardTitle className="text-md font-normal">
-              Enter a sentence you want the AI to say!
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="prompt"
-                    render={({ field }) => (
-                      <FormItem className="col-span-5 md:col-span-4">
-                        <FormControl>
-                          <Input
-                            disabled={isLoading}
-                            placeholder="Hello, my name is Antonio, uh - and I like programming. [laughs]"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button
-                    className="col-span-5 md:col-span-1"
-                    disabled={isLoading}
-                    type="submit"
-                  >
-                    Generate
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </CardContent>
-        </Card>
+        <Form {...form}>
+          <form 
+            onSubmit={form.handleSubmit(onSubmit)} 
+            className="
+              rounded-lg 
+              border 
+              w-full 
+              p-4 
+              px-3 
+              md:px-6 
+              focus-within:shadow-sm
+              grid
+              grid-cols-12
+              gap-2
+            "
+          >
+            <FormField
+              name="prompt"
+              render={({ field }) => (
+                <FormItem className="col-span-12 lg:col-span-10">
+                  <FormControl className="m-0 p-0">
+                    <Input
+                      className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
+                      disabled={isLoading} 
+                      placeholder="Hello there, my name is Genius." 
+                      {...field}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+            <Button className="col-span-12 lg:col-span-2 w-full" type="submit" disabled={isLoading} size="icon">
+              Generate
+            </Button>
+          </form>
+        </Form>
         {isLoading && (
           <div className="p-20">
             <Loader />
           </div>
         )}
         {!voice && !isLoading && (
-          <Empty label="Nothing to see here..." />
+          <Empty label="No audio files generated." />
         )}
         {voice && (
           <audio controls className="w-full mt-8">

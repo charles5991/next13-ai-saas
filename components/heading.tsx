@@ -1,23 +1,27 @@
-import Image from "next/image";
+import { Icon } from "lucide-react";
 
-import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
 
 interface HeadingProps {
   title: string;
   description: string;
-  src: string;
+  icon: Icon;
+  iconColor?: string;
+  bgColor?: string;
 }
 
 export const Heading = ({
   title,
   description,
-  src
+  icon: Icon,
+  iconColor,
+  bgColor,
 }: HeadingProps) => {
   return (
     <>
-      <div className="px-4 lg:px-8 flex items-center gap-x-2">
-        <div className="relative h-20 w-20">
-          <Image fill alt="Icon" src={src} />
+      <div className="px-4 lg:px-8 flex items-center gap-x-3 mb-8">
+        <div className={cn("p-2 w-fit rounded-md", bgColor)}>
+          <Icon className={cn("w-10 h-10", iconColor)} />
         </div>
         <div>
           <h2 className="text-3xl font-bold">{title}</h2>
@@ -26,7 +30,6 @@ export const Heading = ({
           </p>
         </div>
       </div>
-      <Separator className="my-8" />
     </>
   );
 };

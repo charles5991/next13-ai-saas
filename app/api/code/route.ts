@@ -12,7 +12,7 @@ export async function POST(
 ) {
   try {
     const body = await req.json();
-    const { prompt, amount = 1, resolution = "512x512" } = body;
+    const { prompt  } = body;
 
     if (!configuration.apiKey) {
       return new NextResponse("OpenAI API Key not configured.", { status: 500 });
@@ -22,23 +22,15 @@ export async function POST(
       return new NextResponse("Prompt is required", { status: 400 });
     }
 
-    if (!amount) {
-      return new NextResponse("Amount is required", { status: 400 });
-    }
-
-    if (!resolution) {
-      return new NextResponse("Resolution is required", { status: 400 });
-    }
-
-    const response = await openai.createImage({
-      prompt,
-      n: parseInt(amount, 10),
-      size: resolution,
+    const response = await openai.createCompletion({
+      model: "text-davinci-003",
+      max_tokens: 1024,
+      prompt: `You are a programmer, and you answer exclusively in code snippets. Use the following prompt to generate a snippet: ${prompt}`
     });
 
-    return NextResponse.json(response.data.data);
+    return NextResponse.json(response.data.choices[0].text);
   } catch (error) {
-    console.log('[PHOTO_ERROR]', error);
+    console.log('[CONVERSATION_ERROR]', error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 };

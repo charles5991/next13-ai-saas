@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { Configuration, OpenAIApi } from "openai";
 import Replicate from "replicate";
 
 const replicate = new Replicate({
@@ -18,17 +17,17 @@ export async function POST(
     }
 
     const response = await replicate.run(
-      "suno-ai/bark:b76242b40d67c76ab6742e987628a2a9ac019e11d56ab96c4e91ce03b79b2787",
+      "anotherjesse/zeroscope-v2-xl:71996d331e8ede8ef7bd76eba9fae076d31792e4ddf4ad057779b443d6aea62f",
       {
         input: {
-          prompt,
+          prompt
         }
       }
     );
 
     return NextResponse.json(response);
   } catch (error) {
-    console.log('[CHAT_ERROR]', error);
+    console.log('[VIDEO_ERROR]', error);
     return new NextResponse("Internal Error", { status: 500 });
   }
 };
