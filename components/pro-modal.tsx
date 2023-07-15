@@ -16,7 +16,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useProModal } from "@/hooks/use-pro-modal";
-import { tools } from "@/app/(dashboard)/(routes)/dashboard/constants";
+import { tools } from "@/constants";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
@@ -67,7 +67,7 @@ export const ProModal = () => {
         </DialogHeader>
         <DialogFooter>
           <Button disabled={loading} onClick={onSubscribe} size="lg" variant="premium" className="w-full">
-            Upgrade for $20 / month
+            Upgrade
             <Zap className="w-4 h-4 ml-2 fill-white" />
           </Button>
         </DialogFooter>
