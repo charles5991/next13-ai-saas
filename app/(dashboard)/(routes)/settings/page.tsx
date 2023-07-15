@@ -1,29 +1,11 @@
-"use client";
-
-import axios from "axios";
-import { useState } from "react";
 import { Settings } from "lucide-react";
-import { toast } from "react-hot-toast";
 
 import { Heading } from "@/components/heading";
-import { Button } from "@/components/ui/button";
+import { SubscriptionButton } from "@/components/subscription-button";
+import { checkSubscription } from "@/lib/subscription";
 
-const SettingsPage = () => {
-  const [loading, setLoading] = useState(false);
-
-  const onClick = async () => {
-    try {
-      setLoading(true);
-
-      const response = await axios.get("/api/stripe");
-
-      window.location.href = response.data.url;
-    } catch (error) {
-      toast.error("Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  }
+const SettingsPage = async () => {
+  const isPro = await checkSubscription();
 
   return ( 
     <div>
@@ -34,10 +16,11 @@ const SettingsPage = () => {
         iconColor="text-gray-700"
         bgColor="bg-gray-700/10"
       />
-      <div className="px-4 lg:px-8">
-        <Button disabled={loading} onClick={onClick} >
-          Manage Subscription
-        </Button>
+      <div className="px-4 lg:px-8 space-y-4">
+        <div className="text-muted-foreground text-sm">
+          {isPro ? "You are currently on a Pro plan." : "You are currently on a free plan."}
+        </div>
+        <SubscriptionButton isPro={isPro} />
       </div>
     </div>
    );
