@@ -6,7 +6,8 @@ import { Code } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import SyntaxHighlighter from 'react-syntax-highlighter';
+import ReactMarkdown from "react-markdown";
+import { useRouter } from "next/navigation";
 
 import { BotAvatar } from "@/components/bot-avatar";
 import { Heading } from "@/components/heading";
@@ -16,20 +17,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { Loader } from "@/components/loader";
-import { useProProtection } from "@/hooks/use-pro-protection";
 import { UserAvatar } from "@/components/user-avatar";
+import { Empty } from "@/components/ui/empty";
+import { useProModal } from "@/hooks/use-pro-modal";
+import { GPTMessage } from "@/types";
 
 import { formSchema } from "./constants";
-import { Empty } from "@/components/ui/empty";
-
-const formatCode = (code: string) => {
-  return code.replace(/\n/g, "<br />")
-}
 
 const CodePage = () => {
-  useProProtection();
-  
-  const [messages, setMessages] = useState<{ isUser: boolean; message: string; }[]>([]);
+  const router = useRouter();
+  const proModal = useProModal();
+  const [messages, setMessages] = useState<GPTMessage[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,18 +36,25 @@ const CodePage = () => {
     }
   });
 
-  
   const isLoading = form.formState.isSubmitting;
   
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      setMessages((current) => [{ isUser: true, message: values.prompt }, ...current]);
+      const userMessage: GPTMessage = { role: "user", content: values.prompt };
+      const newMessages = [...messages, userMessage];
       
-      const response = await axios.post('/api/code', values);
-      setMessages((current) => [{ isUser: false, message: response.data }, ...current]);
+      const response = await axios.post('/api/code', { messages: newMessages });
+      setMessages((current) => [...current, userMessage, response.data]);
+      
       form.reset();
     } catch (error: any) {
-      toast.error("Something went wrong.");
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      } else {
+        toast.error(error?.response?.data);
+      }
+    } finally {
+      router.refresh();
     }
   }
 
@@ -88,7 +93,7 @@ const CodePage = () => {
                       <Input
                         className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                         disabled={isLoading} 
-                        placeholder="React.js snippet for a toggle button using hooks" 
+                        placeholder="Simple toggle button using react hooks." 
                         {...field}
                       />
                     </FormControl>
@@ -108,27 +113,30 @@ const CodePage = () => {
             </div>
           )}
           {messages.length === 0 && !isLoading && (
-            <Empty label="No code generated." />
+            <Empty label="No conversation started." />
           )}
-          {messages.map((message) => (
-            <div 
-              key={message.message} 
-              className={cn(
-                "p-8 w-full flex items-start gap-x-8 rounded-lg",
-                message.isUser ? "bg-white border border-black/10" : "bg-muted",
-              )}
-            >
-              <div className="hidden md:block">
-                {!message.isUser ? <BotAvatar /> : <UserAvatar />}
+          <div className="flex flex-col-reverse gap-y-4">
+            {messages.map((message) => (
+              <div 
+                key={message.content} 
+                className={cn(
+                  "p-8 w-full flex items-start gap-x-8 rounded-lg",
+                  message.role === "user" ? "bg-white border border-black/10" : "bg-muted",
+                )}
+              >
+                {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
+                <ReactMarkdown components={{
+                  pre: ({ node, ...props }) => (
+                    <div className="overflow-auto w-full my-2 bg-black/10 p-3 rounded-lg">
+                      <pre {...props} />
+                    </div>
+                  )
+                }} className="text-sm overflow-hidden">
+                  {message.content}
+                </ReactMarkdown>
               </div>
-              {message.isUser && <div>{message.message}</div>}
-              {!message.isUser && (
-                <SyntaxHighlighter showLineNumbers customStyle={{ fontSize: 16 }}>
-                  {message.message}
-                </SyntaxHighlighter>
-              )}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -136,3 +144,4 @@ const CodePage = () => {
 }
  
 export default CodePage;
+

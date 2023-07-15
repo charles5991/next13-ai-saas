@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Download, ImageIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
@@ -16,14 +17,14 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Loader } from "@/components/loader";
 import { Empty } from "@/components/ui/empty";
-import { useProProtection } from "@/hooks/use-pro-protection";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 import { amountOptions, formSchema, resolutionOptions } from "./constants";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const PhotoPage = () => {
-  useProProtection();
-
+  const proModal = useProModal();
+  const router = useRouter();
   const [photos, setPhotos] = useState<string[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -47,7 +48,13 @@ const PhotoPage = () => {
 
       setPhotos(urls);
     } catch (error: any) {
-      toast.error("Something went wrong.");
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      } else {
+        toast.error(error?.response?.data);
+      }
+    } finally {
+      router.refresh();
     }
   }
 

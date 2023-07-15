@@ -4,8 +4,9 @@ import * as z from "zod";
 import axios from "axios";
 import { MessageSquare } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 import { BotAvatar } from "@/components/bot-avatar";
 import { Heading } from "@/components/heading";
@@ -15,17 +16,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 import { Loader } from "@/components/loader";
-import { useProProtection } from "@/hooks/use-pro-protection";
 import { UserAvatar } from "@/components/user-avatar";
+import { Empty } from "@/components/ui/empty";
+import { useProModal } from "@/hooks/use-pro-modal";
+import { GPTMessage } from "@/types";
 
 import { formSchema } from "./constants";
-import { Empty } from "@/components/ui/empty";
 
-const ChatPage = () => {
-  useProProtection();
-  
-  const chatEndRef = useRef<HTMLDivElement>(null);
-  const [messages, setMessages] = useState<{ isUser: boolean; message: string; }[]>([]);
+const ConversationPage = () => {
+  const router = useRouter();
+  const proModal = useProModal();
+  const [messages, setMessages] = useState<GPTMessage[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,18 +35,25 @@ const ChatPage = () => {
     }
   });
 
-  
   const isLoading = form.formState.isSubmitting;
   
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      setMessages((current) => [{ isUser: true, message: values.prompt }, ...current]);
+      const userMessage: GPTMessage = { role: "user", content: values.prompt };
+      const newMessages = [...messages, userMessage];
       
-      const response = await axios.post('/api/conversation', values);
-      setMessages((current) => [{ isUser: false, message: response.data }, ...current]);
+      const response = await axios.post('/api/conversation', { messages: newMessages });
+      setMessages((current) => [...current, userMessage, response.data]);
+      
       form.reset();
     } catch (error: any) {
-      toast.error("Something went wrong.");
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      } else {
+        toast.error(error?.response?.data);
+      }
+    } finally {
+      router.refresh();
     }
   }
 
@@ -106,24 +114,27 @@ const ChatPage = () => {
           {messages.length === 0 && !isLoading && (
             <Empty label="No conversation started." />
           )}
-          {messages.map((message) => (
-            <div 
-              key={message.message} 
-              className={cn(
-                "p-8 w-full flex items-start gap-x-8 rounded-lg",
-                message.isUser ? "bg-white border border-black/10" : "bg-muted",
-              )}
-            >
-              {!message.isUser ? <BotAvatar /> : <UserAvatar />}
-              <p className="text-sm">
-                {message.message}
-              </p>
-            </div>
-          ))}
+          <div className="flex flex-col-reverse gap-y-4">
+            {messages.map((message) => (
+              <div 
+                key={message.content} 
+                className={cn(
+                  "p-8 w-full flex items-start gap-x-8 rounded-lg",
+                  message.role === "user" ? "bg-white border border-black/10" : "bg-muted",
+                )}
+              >
+                {message.role === "user" ? <UserAvatar /> : <BotAvatar />}
+                <p className="text-sm">
+                  {message.content}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
    );
 }
  
-export default ChatPage;
+export default ConversationPage;
+

@@ -6,22 +6,22 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { FileAudio, Send } from "lucide-react";
 
 import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Loader } from "@/components/loader";
 import { Empty } from "@/components/ui/empty";
-import { useProProtection } from "@/hooks/use-pro-protection";
+import { useProModal } from "@/hooks/use-pro-modal";
 
 import { formSchema } from "./constants";
-import { FileAudio, Send } from "lucide-react";
 
 const VoicePage = () => {
-  useProProtection();
-
+  const proModal = useProModal();
+  const router = useRouter();
   const [voice, setVoice] = useState<string>();
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -42,7 +42,13 @@ const VoicePage = () => {
       setVoice(response.data.audio_out);
       form.reset();
     } catch (error: any) {
-      toast.error("Something went wrong.");
+      if (error?.response?.status === 403) {
+        proModal.onOpen();
+      } else {
+        toast.error(error?.response?.data);
+      }
+    } finally {
+      router.refresh();
     }
   }
 
