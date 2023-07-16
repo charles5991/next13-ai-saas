@@ -45,6 +45,7 @@ const VideoPage = () => {
       if (error?.response?.status === 403) {
         proModal.onOpen();
       } else {
+        console.log(error, 'AAA_ERROR?')
         toast.error(error?.response?.data);
       }
     } finally {
