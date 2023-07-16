@@ -3,15 +3,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Montserrat } from 'next/font/google'
-import { Code, ImageIcon, LayoutDashboard, MessageSquare, Music, Settings, VideoIcon, Zap } from "lucide-react";
+import { Code, ImageIcon, LayoutDashboard, MessageSquare, Music, Settings, VideoIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { useProModal } from "@/hooks/use-pro-modal";
-import { Card, CardContent } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { MAX_FREE_COUNTS } from "@/constants";
+import { FreeCounter } from "@/components/free-counter";
 
 const poppins = Montserrat ({ weight: '600', subsets: ['latin'] });
 
@@ -67,7 +63,6 @@ export const Sidebar = ({
   isPro: boolean;
 }) => {
   const pathname = usePathname();
-  const proModal = useProModal();
 
   return (
     <div className="space-y-4 py-4 flex flex-col h-full bg-[#111827] text-white">
@@ -98,24 +93,10 @@ export const Sidebar = ({
           ))}
         </div>
       </div>
-      {!isPro && (
-        <div className="px-3">
-          <Card className="bg-white/10 border-0">
-            <CardContent className="py-6">
-              <div className="text-center text-sm text-white mb-4 space-y-2">
-                <p>
-                  {apiLimitCount} / {MAX_FREE_COUNTS} Free Generations
-                </p>
-                <Progress className="h-3" value={(apiLimitCount / MAX_FREE_COUNTS) * 100} />
-              </div>
-              <Button onClick={proModal.onOpen} variant="premium" className="w-full">
-                Upgrade
-                <Zap className="w-4 h-4 ml-2 fill-white" />
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+      <FreeCounter 
+        apiLimitCount={apiLimitCount} 
+        isPro={isPro}
+      />
     </div>
   );
 };

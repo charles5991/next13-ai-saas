@@ -39,7 +39,7 @@ const VideoPage = () => {
 
       const response = await axios.post('/api/video', values);
 
-      setVideo(response.data.mp4);
+      setVideo(response.data[0]);
       form.reset();
     } catch (error: any) {
       if (error?.response?.status === 403) {
@@ -86,7 +86,7 @@ const VideoPage = () => {
                     <Input
                       className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                       disabled={isLoading} 
-                      placeholder="A path going into the woods" 
+                      placeholder="Clown fish swimming in a coral reef" 
                       {...field}
                     />
                   </FormControl>
