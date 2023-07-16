@@ -46,7 +46,7 @@ const VideoPage = () => {
         proModal.onOpen();
       } else {
         console.log(error, 'AAA_ERROR?')
-        toast.error(error?.response?.data);
+        toast.error("Something went wrong.");
       }
     } finally {
       router.refresh();

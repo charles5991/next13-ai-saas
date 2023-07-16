@@ -50,7 +50,7 @@ const ConversationPage = () => {
       if (error?.response?.status === 403) {
         proModal.onOpen();
       } else {
-        toast.error(error?.response?.data);
+        toast.error("Something went wrong.");
       }
     } finally {
       router.refresh();
