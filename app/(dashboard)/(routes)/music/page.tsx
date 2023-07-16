@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { FileAudio, Send } from "lucide-react";
+import { Music, Send } from "lucide-react";
 
 import { Heading } from "@/components/heading";
 import { Button } from "@/components/ui/button";
@@ -19,10 +19,10 @@ import { useProModal } from "@/hooks/use-pro-modal";
 
 import { formSchema } from "./constants";
 
-const VoicePage = () => {
+const MusicPage = () => {
   const proModal = useProModal();
   const router = useRouter();
-  const [voice, setVoice] = useState<string>();
+  const [music, setMusic] = useState<string>();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -35,11 +35,12 @@ const VoicePage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      setVoice(undefined);
+      setMusic(undefined);
 
-      const response = await axios.post('/api/audio', values);
+      const response = await axios.post('/api/music', values);
+      console.log(response)
 
-      setVoice(response.data.audio_out);
+      setMusic(response.data.audio);
       form.reset();
     } catch (error: any) {
       if (error?.response?.status === 403) {
@@ -55,9 +56,9 @@ const VoicePage = () => {
   return ( 
     <div>
       <Heading
-        title="Audio Generation"
-        description="Turn your prompt into an audio file."
-        icon={FileAudio}
+        title="Music Generation"
+        description="Turn your prompt into music."
+        icon={Music}
         iconColor="text-emerald-500"
         bgColor="bg-emerald-500/10"
       />
@@ -86,7 +87,7 @@ const VoicePage = () => {
                     <Input
                       className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                       disabled={isLoading} 
-                      placeholder="Hello there, my name is Genius." 
+                      placeholder="Piano solo" 
                       {...field}
                     />
                   </FormControl>
@@ -103,12 +104,12 @@ const VoicePage = () => {
             <Loader />
           </div>
         )}
-        {!voice && !isLoading && (
-          <Empty label="No audio files generated." />
+        {!music && !isLoading && (
+          <Empty label="No music generated." />
         )}
-        {voice && (
+        {music && (
           <audio controls className="w-full mt-8">
-            <source src={voice} />
+            <source src={music} />
           </audio>
         )}
       </div>
@@ -116,4 +117,4 @@ const VoicePage = () => {
    );
 }
  
-export default VoicePage;
+export default MusicPage;

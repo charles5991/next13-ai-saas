@@ -39,13 +39,12 @@ const VideoPage = () => {
 
       const response = await axios.post('/api/video', values);
 
-      setVideo(response.data[0]);
+      setVideo(response.data.mp4);
       form.reset();
     } catch (error: any) {
       if (error?.response?.status === 403) {
         proModal.onOpen();
       } else {
-        console.log(error, 'AAA_ERROR?')
         toast.error("Something went wrong.");
       }
     } finally {
@@ -87,7 +86,7 @@ const VideoPage = () => {
                     <Input
                       className="border-0 outline-none focus-visible:ring-0 focus-visible:ring-transparent"
                       disabled={isLoading} 
-                      placeholder="Clown fish swimming around a coral reef." 
+                      placeholder="A path going into the woods" 
                       {...field}
                     />
                   </FormControl>
@@ -108,7 +107,7 @@ const VideoPage = () => {
           <Empty label="No video files generated." />
         )}
         {video && (
-          <video controls className="w-full mt-8 rounded-lg">
+          <video controls className="w-full aspect-video mt-8 rounded-lg border bg-black">
             <source src={video} />
           </video>
         )}
